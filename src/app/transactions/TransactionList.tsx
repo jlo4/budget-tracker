@@ -3,8 +3,6 @@ import { fetchTransactions } from "@/backend/mongoDb/transactions";
 import { Transaction } from "@/lib/types/Transaction";
 import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-dayjs.extend(customParseFormat)
 
 const TransactionList = () => {
     const [loading, setLoading] = React.useState(true);
@@ -41,6 +39,11 @@ const TransactionList = () => {
                     field,
                     headerName: field[0].toUpperCase() + field.slice(1),
                     width: 150,
+                    valueFormatter: (value: Date | string | number) => {
+                        if (field === "date") {
+                            return dayjs(value).format("DD-MM-YYYY")
+                        }
+                    }
                 }))}
                 pageSizeOptions={[10, 25, 100]}
             />

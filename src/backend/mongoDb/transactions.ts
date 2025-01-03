@@ -10,7 +10,8 @@ const insertTransactions = async (transactions: Transaction[]) => {
         const db = client.db(config.mongoDbName);
         const collection = db.collection("transactions");
         const transactionsWithISODate = transactions.map((transaction) => {
-            const [day, month, year] = transaction.date.split("/").map(Number)
+            // TODO: Should check date format
+            const [year, month, day] = transaction.date.split("-").map(Number)
             return {
                 ...transaction,
                 date: new Date(year, month - 1, day)

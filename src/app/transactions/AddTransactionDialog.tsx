@@ -43,6 +43,7 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({ handleClose
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>
+                    <Button type="submit">Add</Button>
                 </DialogActions>
             </Dialog>
         </>
