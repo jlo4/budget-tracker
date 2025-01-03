@@ -5,7 +5,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Grid2 from "@mui/material/Grid2";
-import Navigation from "../components/Navigation";
+import Navigation from "../components/Navigation/Navigation";
 import theme from "../theme";
 
 

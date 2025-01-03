@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import Sidebar from "./Sidebar";
 
 const Navigation = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -28,7 +29,8 @@ const Navigation = () => {
                         Budget tracker
                     </Typography>
                 </Toolbar>
-            </AppBar>            
+            </AppBar>
+            <Sidebar handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
         </>
     );
 };
