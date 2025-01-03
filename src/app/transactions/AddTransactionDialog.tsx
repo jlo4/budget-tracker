@@ -1,6 +1,8 @@
 import React from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
+import { convertRowDataToTransactions, RowData } from "@/utils/gridData";
 import TransactionForm from "./TransactionForm";
+import { insertTransactions } from "@/backend/mongoDb/transactions";
 
 interface AddTransactionDialogProps {
     handleClose: () => void;    
@@ -20,6 +22,16 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({ handleClose
                     component: "form",
                     onSubmit: async (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
+                        const formData = new FormData(event.currentTarget);
+                        const formJson: RowData = Object.fromEntries(
+                            Array.from((formData as FormData).entries())
+                                .map(([key, value]) => 
+                                    [key, typeof value === "string" || typeof value === "number" ? value : ""]
+                                )
+                        );
+                        const transactions = convertRowDataToTransactions([formJson]);
+                        await insertTransactions(transactions);
+                        handleClose();
                     }
                 }}
                 aria-labelledby="modal-modal-title"
