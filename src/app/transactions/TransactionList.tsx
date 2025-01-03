@@ -2,10 +2,14 @@ import React, { useEffect } from "react";
 import { fetchTransactions } from "@/backend/mongoDb/transactions";
 import { Transaction } from "@/lib/types/Transaction";
 import { DataGrid } from "@mui/x-data-grid";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat)
 
 const TransactionList = () => {
     const [loading, setLoading] = React.useState(true);
     const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+
     useEffect(() => {
         const loadTransactions = async () => {
             try {
@@ -28,6 +32,9 @@ const TransactionList = () => {
         <div style={{ minHeight: "400px", width: "100%", maxWidth: "90vw" }}>
             <h2>Transactions</h2>                
             <DataGrid
+                initialState={{
+                    sorting: { sortModel: [{ field: "date", sort: "desc" } ]},
+                }}
                 rows={transactions.map((transaction, index) => ({ id: index + 1, ...transaction, amount: new Intl.NumberFormat("fi-FI", { style: "currency", "currency": "EUR"}).format(transaction.amount) }))}
                 // TODO: Columns should be typed
                 columns={Object.keys(transactions[0] || {}).map((field) => ({
