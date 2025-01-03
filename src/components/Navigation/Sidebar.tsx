@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const drawerWidth = 240;
 
-const Sidebar = ({ handleDrawerToggle, mobileOpen }: { handleDrawerToggle: () => void, mobileOpen: boolean }) => {
+const Sidebar = ({ handleDrawerToggle }: { handleDrawerToggle: () => void, mobileOpen: boolean }) => {
     const theme = useTheme();
     const createDrawerItems = () => {
         return [
