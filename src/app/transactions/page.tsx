@@ -1,9 +1,8 @@
-import TransactionsClientPage from "./TransactionsClientPage";
+import TransactionsClientPage from "./TransactionClientPage";
 
 const TransactionsPage: React.FC = () => {
     return (
         <>
-            <h2>Transactions</h2>
             <TransactionsClientPage />
         </>
     );

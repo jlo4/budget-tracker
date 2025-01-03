@@ -103,7 +103,6 @@ const TransactionForm = () => {
         multiline
         rows={2}
       />
-      
     </FormControl>
   );
 };
