@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Grid2 from "@mui/material/Grid2";
 import Navigation from "../components/Navigation/Navigation";
 import theme from "../theme";
+import config from "@/config";
 
 
 const roboto = Roboto({
@@ -17,7 +18,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Budget tracker",
+  title: config.applicationName,
   description: "Keep your budget on track",
 };
 

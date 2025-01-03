@@ -1,3 +1,4 @@
+import config from "@/config";
 import { Drawer, List, ListItem, ListItemText, Toolbar, Typography, Box, useTheme } from "@mui/material";
 import Link from "next/link";
 
@@ -17,7 +18,7 @@ const Sidebar = ({ handleDrawerToggle, mobileOpen }: { handleDrawerToggle: () =>
         <Box sx={{ backgroundColor: theme.palette.primary.main, color: "white", display: "flex", flexDirection: "column", height: "100%" }}>
             <Toolbar sx={{ color: "white", }}>
                 <Typography variant="h6" noWrap>
-                    Budget tracker
+                    {config.applicationName}
                 </Typography>
             </Toolbar>
             <List sx={{ color: "white" }}>
@@ -34,18 +35,6 @@ const Sidebar = ({ handleDrawerToggle, mobileOpen }: { handleDrawerToggle: () =>
 
     return (
         <nav>
-            <Drawer
-                variant="temporary"
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-                ModalProps={{ keepMounted: true }}
-                sx={{
-                    display: { xs: "block" },
-                    "& .MuiDrawer-paper": { boxSizing: "border-box", color: "white", width: drawerWidth },
-                }}
-            >
-                {drawerContent}
-            </Drawer>
             <Drawer
                 variant="permanent"
                 sx={{
