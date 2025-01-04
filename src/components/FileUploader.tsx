@@ -1,25 +1,14 @@
-import React, { useState } from "react";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import React from "react";
+import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { RowData } from "@/utils/gridData";
+
 import HiddenInput from "./HiddenInput";
 import StyledDialog from "./StyledDialog";
+import useUploadCsvFile from "@/hooks/useUploadCsvFile";
 
 const FileUploader: React.FC = () => {
-  const [rows, setRows] = useState<RowData[]>([]);
-  const [columns, setColumns] = useState<GridColDef[]>([]);
-  const [isPreview, setIsPreview] = useState(false);
-
-  const handleConfirm = async (): Promise<void> => {   
-    setIsPreview(false);
-  };
-
-  const handleCancel = (): void => {
-    setRows([]);
-    setColumns([]);
-    setIsPreview(false);
-  };
+  const { columns, handleCancel, handleConfirm, isPreview, rows, setIsPreview } = useUploadCsvFile();
 
   return (
     <>
@@ -46,12 +35,12 @@ const FileUploader: React.FC = () => {
           actions={{ handleCancel, handleConfirm }}
         >
           <div style={{ height: 400, width: "100%", marginBottom: "20px" }}>
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSizeOptions={[10, 25, 100]}
-              />
-            </div>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSizeOptions={[10, 25, 100]}
+            />
+          </div>
         </StyledDialog>
       ) : <></>}
     </>
