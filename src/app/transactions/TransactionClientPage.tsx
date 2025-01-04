@@ -21,7 +21,7 @@ const TransactionClientPage = () => {
         >
             <AddTransactionDialog open={open} handleOpen={handleOpen} handleClose={handleClose} />              
             <Box>
-                <Typography variant="h6">Upload Transactions</Typography>
+                <Typography variant="h6">Upload transactions</Typography>
                 <FileUploader />
             </Box>
             <TransactionList />            

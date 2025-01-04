@@ -21,7 +21,7 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({ handleClose
 
     return (
         <>
-            <Typography variant="h6">Add a Transaction</Typography>
+            <Typography variant="h6">Add a transaction</Typography>
             <Button variant="contained" color="primary" onClick={handleOpen}>Add</Button>
             <Dialog
                 open={open}
@@ -45,7 +45,7 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({ handleClose
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <DialogTitle>Add Transaction</DialogTitle>
+                <DialogTitle>Add transaction</DialogTitle>
                 <DialogContent>
                     <PhotoUploader getTransactionFromImage={getTransactionFromImage} />
                     <TransactionForm transactionFromImage={transactionFromImage} />
