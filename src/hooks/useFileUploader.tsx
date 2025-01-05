@@ -8,13 +8,16 @@ const useFileUploader = ({ getTransactionFromImage }: { getTransactionFromImage:
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [image, setImage] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        // start camera on mount
+        if (image) {
+            return;
+        }
         const startCamera = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: "environment" } });
-                if (videoRef.current) {
+                if (videoRef.current && stream) {
                     videoRef.current.srcObject = stream;
                     await videoRef.current.play();
                 }
@@ -22,8 +25,8 @@ const useFileUploader = ({ getTransactionFromImage }: { getTransactionFromImage:
                 console.error(error);
             }
         };
-        startCamera();
-    }, []);
+        startCamera();        
+    }, [image, videoRef]);
 
     const stopCamera = () => {
         if (videoRef.current?.srcObject) {
@@ -31,7 +34,7 @@ const useFileUploader = ({ getTransactionFromImage }: { getTransactionFromImage:
           tracks.forEach((track) => track.stop());
           videoRef.current.srcObject = null;
         }
-      };
+    };
 
     const getPhoto = () => {
         if (videoRef.current && canvasRef.current) {
@@ -55,12 +58,19 @@ const useFileUploader = ({ getTransactionFromImage }: { getTransactionFromImage:
 
     const handleUploadPhoto = async () => {
         let formData: FormData | undefined | null = null;
-        if (image) {
-            formData = await processPhoto();
-        }
-        if (formData) {
-            const items: Partial<Transaction> | null = await uploadImage(formData);
-            getTransactionFromImage(items);
+        setLoading(true);
+        try {
+            if (image) {
+                formData = await processPhoto();
+            }
+            if (formData) {
+                const items: Partial<Transaction> | null = await uploadImage(formData);
+                getTransactionFromImage(items);
+            }
+        } catch (error) {
+            console.error("Error uploading image:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -70,7 +80,8 @@ const useFileUploader = ({ getTransactionFromImage }: { getTransactionFromImage:
         image,
         setImage,
         getPhoto,
-        handleUploadPhoto
+        handleUploadPhoto,
+        loading
     }
 };
 

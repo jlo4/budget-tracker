@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Transaction } from "@/lib/types/Transaction";
 import { TextField, MenuItem, Typography, FormControl } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -17,9 +17,27 @@ const NumberInput = styled(TextField)(({ }) => ({
     },
 }));
 
-const TransactionForm = () => {
-  const [formData, setFormData] = useState<Transaction | null>(null);
-
+const TransactionForm = ({ transactionFromImage }: { transactionFromImage: Partial<Transaction> | null}) => {
+  const [formData, setFormData] = useState<Transaction | null>({
+    type: "expense",
+    amount: 0,
+    category: "Groceries",
+    date: "",
+    description: "",
+  });
+  useEffect(() => {
+    if (transactionFromImage) {
+      console.log("Transaction from image:", transactionFromImage);
+      setFormData({
+        type: transactionFromImage.type || "expense",
+        amount: transactionFromImage.amount || 0,
+        category: transactionFromImage.category || "Groceries",
+        date: transactionFromImage.date || "",
+        description: transactionFromImage.description || "",
+      });
+    }
+  }, [transactionFromImage]);
+  
   const handleChange = (e: { target: { name: string; value: string | number }; }) => {
     const { name, value } = e.target;
     setFormData((prevData) => {

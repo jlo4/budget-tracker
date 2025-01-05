@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
 import { convertRowDataToTransactions, RowData } from "@/utils/gridData";
 import TransactionForm from "./TransactionForm";
 import { insertTransactions } from "@/backend/mongoDb/transactions";
+import PhotoUploader from "@/components/photo/PhotoUploader";
+import { Transaction } from "@/lib/types/Transaction";
 
 interface AddTransactionDialogProps {
     handleClose: () => void;    
@@ -11,6 +13,12 @@ interface AddTransactionDialogProps {
 }
 
 const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({ handleClose, handleOpen, open }) => {
+    const [transactionFromImage, setTransactionFromImage] = useState<Partial<Transaction> | null>(null);
+    const getTransactionFromImage = (transaction: Partial<Transaction> | null) => {
+        console.log("Transaction from image:", transaction);
+        setTransactionFromImage(transaction);
+    };
+
     return (
         <>
             <Typography variant="h6">Add a Transaction</Typography>
@@ -39,7 +47,8 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({ handleClose
             >
                 <DialogTitle>Add Transaction</DialogTitle>
                 <DialogContent>
-                    <TransactionForm />
+                    <PhotoUploader getTransactionFromImage={getTransactionFromImage} />
+                    <TransactionForm transactionFromImage={transactionFromImage} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>
