@@ -9,6 +9,8 @@ enum DeploymentEnvironment {
 
 interface ApplicationConfig {
     applicationName: string;
+    azureFormRecognizerEndpoint: string;
+    azureFormRecognizerKey: string;
     deploymentEnv: DeploymentEnvironment;
     mongoDbName: string;
     mongoDbUri: string;
@@ -16,6 +18,8 @@ interface ApplicationConfig {
 
 const config: ApplicationConfig = {
     applicationName: "Budget tracker",
+    azureFormRecognizerEndpoint: process.env.AZURE_FORM_RECOGNIZER_ENDPOINT || "",
+    azureFormRecognizerKey: process.env.AZURE_FORM_RECOGNIZER_API_KEY || "",
     deploymentEnv: (process.env.DEPLOYMENT_ENV || "development") as DeploymentEnvironment,
     mongoDbName: process.env.MONGODB_DB_NAME || "",
     mongoDbUri: process.env.MONGODB_URI || "",
