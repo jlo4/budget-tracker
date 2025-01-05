@@ -12,12 +12,17 @@ const parseTransactionFile = async (file: string | ArrayBuffer | undefined) => {
     const csvFile = typeof file === "string" ? file : Buffer.from(file).toString();
     const csvFileLines = csvFile.split("\n");
     
+    // TODO: These all expect header rows. Should allow uploading files without headers
     const headers = getHeadersFromQuotedCsvFile(csvFileLines[0].replace(/^"|"$/g, ""))[0];
 
     if (headers.split(",")[0] === "Reg. Dag") {
         const csvWithoutHeaders = csvFileLines.slice(1);
 
         const rows = getRowsFromQuotedCsvFile(csvWithoutHeaders);
+        transactions.push(...rows);
+    } else {
+        const csvWithoutHeaders = csvFileLines.slice(1);
+        const rows = getRowsFromCsvFile(csvWithoutHeaders);
         transactions.push(...rows);
     }
 
@@ -69,6 +74,28 @@ const getRowsFromQuotedCsvFile = (csvFile: string[]) => {
     }
     return rows;
 };
+
+const getRowsFromCsvFile = (csvFile: string[]) => {
+    const rows = [];
+    console.log("csvFile", csvFile);
+    for (const row of csvFile) {
+        console.log("row", row);
+        if (row.length < 10) {
+            continue;
+        }
+        const values = row.split(",");
+        const transaction = {
+            date: values[0].replaceAll("/", "-"),
+            payee: values[1],
+            amount: parseFloat(values[2]),
+            type: (parseFloat(values[2]) >= 0 ? "income" : "expense") as "income" | "expense",
+            category: "",
+            description: values[9],
+        };
+        rows.push(transaction);
+    }
+    return rows;
+}
 
 /*
 import { OPTransactionHeaders } from "@/lib/types/csvFileHeaders";
