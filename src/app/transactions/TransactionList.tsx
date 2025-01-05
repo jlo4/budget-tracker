@@ -4,11 +4,22 @@ import { Transaction } from "@/lib/types/Transaction";
 import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 
-const TransactionList = () => {
+const TransactionList = (
+{
+    hasBeenUpdated,
+    setHasBeenUpdated
+}: {
+    hasBeenUpdated: boolean,
+    setHasBeenUpdated: (param: boolean) => void
+}) => {
     const [loading, setLoading] = React.useState(true);
     const [transactions, setTransactions] = React.useState<Transaction[]>([]);
 
     useEffect(() => {
+        if (!hasBeenUpdated) {
+            return;
+        }
+    
         const loadTransactions = async () => {
             try {
                 const response = await fetchTransactions();
@@ -17,10 +28,12 @@ const TransactionList = () => {
                 console.error("Error fetching transactions", error);
             } finally {
                 setLoading(false);
+                setHasBeenUpdated(false);
+
             }
         };
         loadTransactions();
-    }, []);
+    }, [hasBeenUpdated, setHasBeenUpdated]);
 
     if (loading) {
         return <div>Loading...</div>

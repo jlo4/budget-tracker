@@ -5,7 +5,7 @@ import { insertTransactions } from "@/backend/mongoDb/transactions";
 import { parseTransactionFile } from "@/backend/csv/opFileParser";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
-const useUploadCsvFile = () => {
+const useUploadCsvFile = ({ setHasBeenUpdated }: { setHasBeenUpdated: (param: boolean) => void}) => {
     const [rows, setRows] = useState<RowData[]>([]);
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [isPreview, setIsPreview] = useState(false);
@@ -68,6 +68,7 @@ const useUploadCsvFile = () => {
           return;
         };
         await insertTransactions(transactions, "DD-MM-YYYY");
+        setHasBeenUpdated(true);
         setIsPreview(false);
       };
     

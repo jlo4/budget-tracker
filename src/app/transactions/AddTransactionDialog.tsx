@@ -9,10 +9,11 @@ import { Transaction } from "@/lib/types/Transaction";
 interface AddTransactionDialogProps {
     handleClose: () => void;    
     handleOpen: () => void;
-    open: boolean;    
+    open: boolean;
+    setHasBeenUpdated: (param: boolean) => void;
 }
 
-const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({ handleClose, handleOpen, open }) => {
+const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({ handleClose, handleOpen, open, setHasBeenUpdated }) => {
     const [transactionFromImage, setTransactionFromImage] = useState<Partial<Transaction> | null>(null);
     const getTransactionFromImage = (transaction: Partial<Transaction> | null) => {
         console.log("Transaction from image:", transaction);
@@ -39,6 +40,7 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({ handleClose
                         );
                         const transactions = convertRowDataToTransactions([formJson]);
                         await insertTransactions(transactions);
+                        setHasBeenUpdated(true);
                         handleClose();
                     }
                 }}

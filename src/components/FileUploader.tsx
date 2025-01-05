@@ -7,7 +7,7 @@ import HiddenInput from "./HiddenInput";
 import StyledDialog from "./StyledDialog";
 import useUploadCsvFile from "@/hooks/useUploadCsvFile";
 
-const FileUploader: React.FC = () => {
+const FileUploader = ({ setHasBeenUpdated }: { setHasBeenUpdated: (param: boolean) => void}) => {
   const {
     columns,
     handleCancel,
@@ -16,7 +16,7 @@ const FileUploader: React.FC = () => {
     isPreview,
     rows,
     setIsPreview
-  } = useUploadCsvFile();
+  } = useUploadCsvFile({ setHasBeenUpdated });
 
   return (
     <>
