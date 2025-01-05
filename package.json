@@ -18,6 +18,8 @@
     "@mui/material-nextjs": "^6.3.0",
     "@mui/x-data-grid": "^7.23.5",
     "@types/papaparse": "^5.3.15",
+    "csv-parser": "^3.1.0",
+    "csv-stringify": "^6.5.2",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "mongodb": "^6.12.0",

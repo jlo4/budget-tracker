@@ -2,7 +2,7 @@ import { useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import { convertRowDataToTransactions, RowData } from "@/utils/gridData";
 import { insertTransactions } from "@/backend/mongoDb/transactions";
-import Papa, { ParseResult } from "papaparse";
+import { parseTransactionFile } from "@/backend/csv/opFileParser";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const useUploadCsvFile = () => {
@@ -17,41 +17,48 @@ const useUploadCsvFile = () => {
           alert("No file selected.");
           return;
         }
-    
-        // Validate file size
+        
         if (file.size > MAX_FILE_SIZE) {
           alert("File is too large. Please upload a file smaller than 10 MB.");
           return;
         }
-    
-        // Parse the CSV file
-        Papa.parse<RowData>(file, {
-          header: true, // Treat the first row as column headers
-          skipEmptyLines: true,
-          complete: (result: ParseResult<RowData>) => {
-            if (result.errors.length > 0) {
-              alert("Error parsing file. Please check the file format.");
-              console.error(result.errors);
-              return;
-            }
-    
-            const parsedRows = result.data;
-            const parsedColumns: GridColDef[] = Object.keys(parsedRows[0] || {}).map((field) => ({
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = async (e) => {
+          const data = e.target?.result;
+          if (!data) {
+            alert("Error reading file.");
+            return;
+          }
+
+          const transactions = await parseTransactionFile(data);
+          if (!transactions) {
+            alert("Error parsing file. Please check the file format.");
+            return;
+          }
+          const parsedColumns: GridColDef[] = ["type", "date", "payee", "description", "amount", "category"].map((field) => {            
+            return {
               field,
-              headerName: field,
+              headerName: field[0].toUpperCase() + field.slice(1),
               width: 150,
-            }));
-    
-            setRows(
-              parsedRows.map((row, index) => ({
-                id: index, // Add an ID for DataGrid
-                ...row,
-              }))
-            );
-            setColumns(parsedColumns);
-            setIsPreview(true); // Show the preview grid
-          },
-        });
+            };
+          });
+
+          setRows(transactions.map((transaction, index) => {
+            return {
+              id: index, // Add an ID for DataGrid
+              type: transaction.type,
+              date: transaction.date,
+              payee: transaction.payee ?? "",
+              description: transaction.description ?? "",
+              amount: transaction.amount,
+              category: transaction.category ?? "",
+            };
+          }));
+          setColumns(parsedColumns);
+          setIsPreview(true);
+        };        
+        
       };
     
       const handleConfirm = async (): Promise<void> => {
@@ -60,7 +67,7 @@ const useUploadCsvFile = () => {
           // There was an error, keep the preview open to allow the user to fix it
           return;
         };
-        await insertTransactions(transactions);
+        await insertTransactions(transactions, "DD-MM-YYYY");
         setIsPreview(false);
       };
     

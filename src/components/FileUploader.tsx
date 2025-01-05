@@ -8,7 +8,15 @@ import StyledDialog from "./StyledDialog";
 import useUploadCsvFile from "@/hooks/useUploadCsvFile";
 
 const FileUploader: React.FC = () => {
-  const { columns, handleCancel, handleConfirm, handleFileUpload, isPreview, rows, setIsPreview } = useUploadCsvFile();
+  const {
+    columns,
+    handleCancel,
+    handleConfirm,
+    handleFileUpload,
+    isPreview,
+    rows,
+    setIsPreview
+  } = useUploadCsvFile();
 
   return (
     <>
@@ -24,7 +32,7 @@ const FileUploader: React.FC = () => {
           onChange={handleFileUpload}
           multiple
       />
-        Upload files
+        Upload file
       </Button>
 
       {isPreview ? (

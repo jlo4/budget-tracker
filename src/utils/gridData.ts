@@ -5,6 +5,7 @@ const convertRowDataToTransactions = (rowData: RowData[]): Transaction[] => {
     try {
       return rowData.map((row, index) => {
         errorIndex = index + 1;
+        console.log("row", row);
         if (!row.type || !row.date || !row.amount) throw new Error("Missing required fields");
         return {
           type: row.type as Transaction["type"],
