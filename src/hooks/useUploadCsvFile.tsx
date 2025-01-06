@@ -3,6 +3,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import { convertRowDataToTransactions, RowData } from "@/utils/gridData";
 import { insertTransactions } from "@/backend/mongoDb/transactions";
 import { parseTransactionFile } from "@/backend/csv/opFileParser";
+import { transactionKeys } from "@/lib/types/Transaction";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const useUploadCsvFile = ({ setHasBeenUpdated }: { setHasBeenUpdated: (param: boolean) => void}) => {
@@ -36,7 +37,8 @@ const useUploadCsvFile = ({ setHasBeenUpdated }: { setHasBeenUpdated: (param: bo
             alert("Error parsing file. Please check the file format.");
             return;
           }
-          const parsedColumns: GridColDef[] = ["type", "date", "payee", "description", "amount", "category"].map((field) => {            
+
+          const parsedColumns: GridColDef[] = transactionKeys.map((field) => {
             return {
               field,
               headerName: field[0].toUpperCase() + field.slice(1),

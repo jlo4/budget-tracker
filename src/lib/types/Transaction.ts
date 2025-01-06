@@ -7,3 +7,7 @@ export interface Transaction {
     description?: string;
     payee?: string;
 }
+
+type TransctionKeys = keyof Transaction;
+
+export const transactionKeys: TransctionKeys[] = ["date", "payee", "amount", "category", "description", ];
