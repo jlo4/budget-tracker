@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { fetchTransactions } from "@/backend/mongoDb/transactions";
-import { Transaction } from "@/lib/types/Transaction";
+import { Transaction, transactionKeys } from "@/lib/types/Transaction";
 import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 
@@ -48,7 +48,7 @@ const TransactionList = (
                 }}
                 rows={transactions.map((transaction, index) => ({ id: index + 1, ...transaction, amount: new Intl.NumberFormat("fi-FI", { style: "currency", "currency": "EUR"}).format(transaction.amount) }))}
                 // TODO: Columns should be typed
-                columns={Object.keys(transactions[0] || {}).map((field) => ({
+                columns={transactionKeys.map((field) => ({
                     field,
                     headerName: field[0].toUpperCase() + field.slice(1),
                     width: 150,
