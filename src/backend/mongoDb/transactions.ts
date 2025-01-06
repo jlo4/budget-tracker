@@ -18,7 +18,8 @@ const insertTransactions = async (transactions: Transaction[], incomingDateForma
             }
             return {
                 ...transaction,
-                date: new Date(year, month - 1, day)
+                date: new Date(year, month - 1, day),
+                amount: transaction.type === "expense" && transaction.amount <= 0 ? transaction.amount : -transaction.amount
             };
         });
         const result = await collection?.insertMany(transactionsWithISODate);
