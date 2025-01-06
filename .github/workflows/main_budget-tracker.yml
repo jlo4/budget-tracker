@@ -10,53 +10,39 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+          cache: "npm"
 
-      - name: npm install, build, and test
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        env:
+          AZURE_FORM_RECOGNIZER_ENDPOINT: ${{ secrets.AZURE_FORM_RECOGNIZER_ENDPOINT }}
+          AZURE_FORM_RECOGNIZER_KEY: ${{ secrets.AZURE_FORM_RECOGNIZER_KEY }}
+          DEPLOYMENT_ENV: "production"
+          HTTP_BASIC_AUTH: ${{ secrets.HTTP_BASIC_AUTH }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          MONGODB_DB_NAME: ${{ secrets.MONGODB_DB_NAME }}
+        
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm run build
+          cp -r .next/static .next/standalone/.next/static
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-app
-          path: release.zip
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-      
-      - name: 'Deploy to Azure Web App'
+      - name: 'Deploy to Azure Web App'        
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'budget-tracker'
           slot-name: 'Production'
-          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8C660027C11B44A88E60407B40C45BF7 }}
+          package: ./.next/standalone
