@@ -1,8 +1,7 @@
 "use server";
 
 import { Transaction } from "@/lib/types/Transaction";
-import { getClient, getCollection } from "./client";
-import config from "@/config";
+import { getCollection } from "./client";
 
 const insertTransactions = async (transactions: Transaction[], incomingDateFormat = "YYYY-MM-DD") => {
     try {        
@@ -35,18 +34,13 @@ const insertTransactions = async (transactions: Transaction[], incomingDateForma
 };
 
 const fetchTransactions = async () => {
-    const mongoClient = await getClient();
     try {
-        await mongoClient.connect();
-        const db = mongoClient.db(config.mongoDbName);
-        const collection = db.collection("transactions");
+        const collection = await getCollection("transactions");
         const result = await collection?.find<Transaction>({}, { projection: { _id: 0 }}).sort({ date: -1 }).toArray();
         return result;
     } catch (error) {
         console.error("Error fetching transactions", error);
         return [];
-    } finally {
-        await mongoClient.close();
     }
 };
 
