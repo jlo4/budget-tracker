@@ -3,16 +3,23 @@
 import { Transaction } from "@/lib/types/Transaction";
 import { getCollection } from "./client";
 
-const insertTransactions = async (transactions: Transaction[]) => {
+const insertTransactions = async (transactions: Transaction[], incomingDateFormat = "YYYY-MM-DD") => {
     try {        
         const collection = await getCollection("transactions");
         const transactionsWithISODate = transactions.map((transaction) => {
             // TODO: Should check date format
-            const [year, month, day] = transaction.date.split("-").map(Number)
+            let year = 0;
+            let month = 0;
+            let day = 0;
+            if (incomingDateFormat === "DD-MM-YYYY") {
+                [day, month, year] = transaction.date.split("-").map(Number)                
+            } else if (incomingDateFormat === "YYYY-MM-DD") {
+                [year, month, day] = transaction.date.split("-").map(Number)                
+            }
             return {
                 ...transaction,
                 date: new Date(year, month - 1, day)
-            }
+            };
         });
         const result = await collection?.insertMany(transactionsWithISODate);
         if (!result) {

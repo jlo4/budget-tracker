@@ -20,7 +20,8 @@ const eslintConfig = [
     ),
     {
       rules: {
-        "quotes": ["error", "double"]
+        "quotes": ["error", "double"],
+        "@typescript-eslint/no-explicit-any": "off",
       },
     },
 ];
