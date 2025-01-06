@@ -21,6 +21,7 @@ const TransactionForm = ({ transactionFromImage }: { transactionFromImage: Parti
   const [formData, setFormData] = useState<Transaction | null>({
     type: "expense",
     amount: 0,
+    payee: "",
     category: "Groceries",
     date: "",
     description: "",
@@ -31,6 +32,7 @@ const TransactionForm = ({ transactionFromImage }: { transactionFromImage: Parti
       setFormData({
         type: transactionFromImage.type || "expense",
         amount: transactionFromImage.amount || 0,
+        payee: transactionFromImage.payee || "",
         category: transactionFromImage.category || "Groceries",
         date: transactionFromImage.date || "",
         description: transactionFromImage.description || "",
@@ -78,6 +80,15 @@ const TransactionForm = ({ transactionFromImage }: { transactionFromImage: Parti
         fullWidth
         margin="normal"
         required
+      />
+      <TextField
+        id="payee"
+        name="payee"
+        label="Payee"
+        value={formData?.payee}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
       />
       <TextField
         id="category"
