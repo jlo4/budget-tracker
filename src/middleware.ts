@@ -4,7 +4,14 @@ import { NextResponse } from "next/server";
 const [AUTH_USER, AUTH_PASS] = (process.env.HTTP_BASIC_AUTH || ":").split(":");
 
 export const middleware = (req: NextRequest) => {
-    
+    const { pathname } = req.nextUrl;
+    if (
+        pathname.startsWith("/_next") || // exclude Next.js internals
+        pathname.startsWith("/api") //  exclude all API routes, handle authorization in the API route
+    ) {
+        return NextResponse.next();
+    }
+
     if (!isAuthenticated(req)) {
         return new NextResponse("Authentication required", {
             status: 401,
@@ -34,7 +41,3 @@ const isAuthenticated = (req: NextRequest) => {
     }
     return false;
 }
-
-export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
-};
