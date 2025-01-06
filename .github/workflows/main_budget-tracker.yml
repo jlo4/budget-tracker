@@ -28,7 +28,7 @@ jobs:
       - name: Build project
         env:
           AZURE_FORM_RECOGNIZER_ENDPOINT: ${{ secrets.AZURE_FORM_RECOGNIZER_ENDPOINT }}
-          AZURE_FORM_RECOGNIZER_KEY: ${{ secrets.AZURE_FORM_RECOGNIZER_KEY }}
+          AZURE_FORM_RECOGNIZER_API_KEY: ${{ secrets.AZURE_FORM_RECOGNIZER_API_KEY }}
           DEPLOYMENT_ENV: "production"
           HTTP_BASIC_AUTH: ${{ secrets.HTTP_BASIC_AUTH }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
