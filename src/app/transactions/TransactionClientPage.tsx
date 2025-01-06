@@ -17,7 +17,7 @@ const TransactionClientPage = () => {
 
     return (
         <ResponsiveContainer 
-            size={8}
+            size={12}
             sx={{ mx: "auto", mt: 4 }}                
         >
             <AddTransactionDialog

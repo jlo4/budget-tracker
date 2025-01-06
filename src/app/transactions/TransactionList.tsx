@@ -51,7 +51,7 @@ const TransactionList = (
                 columns={transactionKeys.map((field) => ({
                     field,
                     headerName: field[0].toUpperCase() + field.slice(1),
-                    width: 150,
+                    width: field === "description" ? 300 : 150,
                     valueFormatter: (value: Date | string | number) => {
                         if (field === "date") {
                             return dayjs(value).format("DD-MM-YYYY")
