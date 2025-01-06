@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const drawerWidth = 240;
 
-const Sidebar = ({ handleDrawerToggle }: { handleDrawerToggle: () => void, mobileOpen: boolean }) => {
+const Sidebar = ({ handleDrawerToggle, mobileOpen }: { handleDrawerToggle: () => void, mobileOpen: boolean }) => {
     const theme = useTheme();
     const createDrawerItems = () => {
         return [
@@ -35,6 +35,16 @@ const Sidebar = ({ handleDrawerToggle }: { handleDrawerToggle: () => void, mobil
 
     return (
         <nav>
+            <Drawer
+                variant="temporary"
+                sx={{
+                    display: { xs: "block", sm: "none" },
+                    "& .MuiDrawer-paper": { backgroundColor: theme.palette.primary.main, boxSizing: "border-box", color: "white", width: drawerWidth },
+                }}
+                open={mobileOpen}
+            >
+                {drawerContent}
+            </Drawer>
             <Drawer
                 variant="permanent"
                 sx={{
