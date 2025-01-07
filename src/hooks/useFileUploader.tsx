@@ -17,7 +17,7 @@ const useFileUploader = ({ getTransactionFromImage }: { getTransactionFromImage:
         const startCamera = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: "environment" } });
-                if (videoRef.current?.srcObject && stream) {
+                if (videoRef.current && stream) {
                     videoRef.current.srcObject = stream;
                     await videoRef.current.play();
                 }
@@ -65,6 +65,7 @@ const useFileUploader = ({ getTransactionFromImage }: { getTransactionFromImage:
             }
             if (formData) {
                 const items: Partial<Transaction> | null = await uploadImage(formData);
+                console.log("Items:", items);
                 getTransactionFromImage(items);
             }
         } catch (error) {

@@ -10,7 +10,7 @@ enum COLORS {
   GREEN = "#004d40"
 }
 
-export const Home = async () => {
+const Home = async () => {
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
   const nextMonth = currentMonth + 1;

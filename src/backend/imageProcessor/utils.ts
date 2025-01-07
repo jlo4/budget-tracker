@@ -66,12 +66,14 @@ const uploadImage = async (formData: FormData): Promise<Partial<Transaction> | n
       }
       
       const receipt = await analyzeDocument(imageBuffer);
+      
       return {
         type: "expense",
         payee: (receipt?.MerchantName as DocumentFieldWithValue)?.value?.toString() ?? undefined,
         date: (receipt?.TransactionDate as DocumentFieldWithValue)?.value?.toString() ?? undefined,
         amount: Number((receipt?.Total as DocumentFieldWithValue)?.value) ?? Number((receipt?.SubTotal as DocumentFieldWithValue)?.value) ?? null,
       };
+      
     } catch (error) {
       console.error(error);
       return null;
