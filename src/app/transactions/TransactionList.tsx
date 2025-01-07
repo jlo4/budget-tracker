@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchTransactions } from "@/backend/mongoDb/transactions";
 import { Transaction, transactionKeys } from "@/lib/types/Transaction";
 import { DataGrid } from "@mui/x-data-grid";
@@ -13,8 +13,8 @@ const TransactionList = (
     hasBeenUpdated: boolean,
     setHasBeenUpdated: (param: boolean) => void
 }) => {
-    const [loading, setLoading] = React.useState(true);
-    const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
 
     useEffect(() => {
         if (!hasBeenUpdated) {
@@ -28,10 +28,11 @@ const TransactionList = (
                 setTransactions(response ?? []);
             } catch (error) {
                 console.error("Error fetching transactions", error);
+                alert("Error fetching transactions" + error);
+                throw error;
             } finally {
                 setLoading(false);
-                setHasBeenUpdated(false);
-
+                setHasBeenUpdated(false);                
             }
         };
         loadTransactions();

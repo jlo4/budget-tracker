@@ -40,6 +40,7 @@ const fetchTransactions = async () => {
         return result;
     } catch (error) {
         console.error("Error fetching transactions", error);
+        return [];
     }
 };
 

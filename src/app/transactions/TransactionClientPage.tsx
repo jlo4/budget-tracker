@@ -16,9 +16,10 @@ const TransactionClientPage = () => {
     const handleClose = () => setOpen(false);
 
     return (
-        <ResponsiveContainer 
+        <ResponsiveContainer
             size={12}
             sx={{ mx: "auto", mt: 4  }}                
+
         >
             <AddTransactionDialog
                 open={open}
