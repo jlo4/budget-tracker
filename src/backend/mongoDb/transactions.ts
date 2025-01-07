@@ -19,7 +19,7 @@ const insertTransactions = async (transactions: Transaction[], incomingDateForma
             return {
                 ...transaction,
                 date: new Date(year, month - 1, day),
-                amount: transaction.type === "expense" && transaction.amount <= 0 ? transaction.amount : -transaction.amount
+                amount: transaction.type === "income" && transaction.amount >= 0 ? transaction.amount : transaction.type === "expense" && transaction.amount <= 0 ? transaction.amount : -transaction.amount
             };
         });
         const result = await collection?.insertMany(transactionsWithISODate);
@@ -43,7 +43,84 @@ const fetchTransactions = async () => {
     }
 };
 
+const sumTransactionsByMonth = async () => {
+    try {
+        const collection = await getCollection("transactions");
+        const result = await collection?.aggregate([
+            {
+                $addFields: {
+                  yearMonth: { 
+                    $dateToString: { format: "%Y-%m", date: "$date" } 
+                  }
+                }
+              },
+              {
+                $group: {
+                  _id: "$yearMonth",
+                  totalAmount: { $sum: "$amount" }
+                }
+              },
+              {
+                $project: {
+                  _id: 1,
+                  totalAmount: { $round: ["$totalAmount", 2] }
+                }
+              },
+              {
+                $sort: { _id: 1 }
+              }
+        ]).toArray();
+        return result;
+    } catch (error) {
+        console.error("Error fetching transactions", error);
+    }
+};
+
+const getTransactionsByMonth = async (currMonth: string, nextMonth: string) => {  
+    try {
+        const collection = await getCollection("transactions");
+        const result = await collection?.aggregate([
+            {
+                $addFields: {
+                  currMonth: {
+                    $dateToString: { format: "%Y-%m", date: "$date" }
+                  }
+                }
+            },
+            { 
+                $match: {
+                    date: { $gte: new Date(`${currMonth}-01`), $lt: new Date(`${nextMonth}-01`) }
+                }
+            },
+              {
+                $group: {
+                  _id: "$yearMonth",
+                  currMonth: { $first: "$currMonth" },
+                  totalExpenses: {
+                    $sum: {
+                      $cond: [{ $eq: ["$type", "expense"] }, "$amount", 0]
+                    }
+                  },
+                  totalIncome: {
+                    $sum: {
+                      $cond: [{ $eq: ["$type", "income"] }, "$amount", 0]
+                    }
+                  }
+                }
+              },
+              {
+                $sort: { _id: 1 }
+              }
+        ]).toArray();
+        return result;
+    } catch (error) {
+        console.error("Error fetching transactions", error);
+    }
+};
+
 export {
     fetchTransactions,
-    insertTransactions
+    getTransactionsByMonth,
+    insertTransactions,
+    sumTransactionsByMonth,
 }

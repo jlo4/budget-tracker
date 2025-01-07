@@ -87,8 +87,8 @@ const getRowsFromCsvFile = (csvFile: string[]) => {
         const transaction = {
             date: values[0].replaceAll("/", "-"),
             payee: values[1],
-            amount: parseFloat(values[2]),
-            type: (parseFloat(values[2]) >= 0 ? "income" : "expense") as "income" | "expense",
+            amount: values[3] === "income" && parseFloat(values[2]) >= 0 ? parseFloat(values[2]) : values[3] === "expense" && parseFloat(values[2]) <= 0 ? parseFloat(values[2]) : -parseFloat(values[2]),
+            type: ["income", "expense"].includes(values[3]) ? (values[3] as "income" | "expense") : (parseFloat(values[2]) >= 0 ? "income" : "expense"),
             category: "",
             description: values[9],
         };
