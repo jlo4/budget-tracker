@@ -17,7 +17,7 @@ const useFileUploader = ({ getTransactionFromImage }: { getTransactionFromImage:
         const startCamera = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: "environment" } });
-                if (videoRef.current && stream) {
+                if (videoRef.current?.srcObject && stream) {
                     videoRef.current.srcObject = stream;
                     await videoRef.current.play();
                 }

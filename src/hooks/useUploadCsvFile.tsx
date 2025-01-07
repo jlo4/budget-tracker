@@ -69,7 +69,7 @@ const useUploadCsvFile = ({ setHasBeenUpdated }: { setHasBeenUpdated: (param: bo
           // There was an error, keep the preview open to allow the user to fix it
           return;
         };
-        await insertTransactions(transactions, "DD-MM-YYYY");
+        await insertTransactions(transactions);
         setHasBeenUpdated(true);
         setIsPreview(false);
       };
